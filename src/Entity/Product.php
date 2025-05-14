@@ -29,9 +29,15 @@ class Product
     #[ORM\ManyToMany(targetEntity: Process::class, mappedBy: 'ProductId')]
     private Collection $process;
 
+    /**
+     * @var Collection<int, BuildProduct>
+     */
+
+
     public function __construct()
     {
         $this->process = new ArrayCollection();
+
     }
 
     public function getId(): ?int
@@ -96,4 +102,6 @@ class Product
 
         return $this;
     }
+
+
 }
