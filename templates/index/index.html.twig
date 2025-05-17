@@ -1,82 +1,251 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Welcome to NXDOne ERP{% endblock %}
+{% block title %}NXDTech ERP - Dashboard{% endblock %}
+
+{% block page_title %}Dashboard{% endblock %}
+
+{% block breadcrumb_items %}
+    <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+{% endblock %}
+
+{% block page_actions %}
+    {% if is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('admin_dashboard') }}" class="btn btn-outline-primary me-2">
+            <i class="fas fa-cog"></i> Admin Panel
+        </a>
+    {% endif %}
+    {% if is_granted('CREATE_ORDER') %}
+        <a href="{{ path('order_new') }}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i> New Order
+        </a>
+    {% endif %}
+{% endblock %}
 
 {% block body %}
-
-    {# Hero Section #}
-    <section class="hero-section bg-primary bg-gradient text-white py-5">
-        <div class="container py-5">
-            <div class="row align-items-center">
-                <div class="col-lg-6 mb-4 mb-lg-0">
-                    <h1 class="display-4 fw-bold mb-4">Transform Your Business with NXDOne</h1>
-                    <p class="lead mb-4">The next-generation ERP solution designed for modern enterprises with real-time analytics and AI-powered automation.</p>
-                    <div class="d-flex flex-wrap gap-3">
-                        <a href="{{ path('index') }}" class="btn btn-light btn-lg px-4">Get Started</a>
-                        <a href="{{ path('index') }}" class="btn btn-outline-light btn-lg px-4">Learn More</a>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <img src="{{ asset('images/hero-dashboard.png') }}" alt="NXDOne Dashboard" class="img-fluid rounded shadow">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    {# Features Section #}
-    <section class="py-5">
-        <div class="container py-5">
-            <div class="text-center mb-5">
-                <h2 class="fw-bold">Powerful Features</h2>
-                <p class="lead text-muted">Everything you need to streamline your operations</p>
-            </div>
-
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="card h-100 border-0 shadow-sm">
-                        <div class="card-body text-center p-4">
-                            <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-3 mb-3 mx-auto" style="width: 60px; height: 60px;">
-                                <i class="fas fa-chart-line fa-2x"></i>
+    <div class="row">
+        {# Sales Widget - Visible to sales roles #}
+        {% if is_granted('VIEW_SALES') %}
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card dashboard-card h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted mb-2">Today's Sales</h6>
+                                <h3 class="mb-0">${{ todays_sales|number_format(2) }}</h3>
+                                <small class="{{ sales_change >= 0 ? 'text-success' : 'text-danger' }}">
+                                    <i class="fas fa-caret-{{ sales_change >= 0 ? 'up' : 'down' }} me-1"></i>
+                                    {{ sales_change|abs }}% from yesterday
+                                </small>
                             </div>
-                            <h4 class="mb-3">Real-Time Analytics</h4>
-                            <p class="text-muted">Make data-driven decisions with live dashboards and customizable reports.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="card h-100 border-0 shadow-sm">
-                        <div class="card-body text-center p-4">
-                            <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-3 mb-3 mx-auto" style="width: 60px; height: 60px;">
-                                <i class="fas fa-robot fa-2x"></i>
+                            <div class="card-icon primary">
+                                <i class="fas fa-dollar-sign"></i>
                             </div>
-                            <h4 class="mb-3">AI Automation</h4>
-                            <p class="text-muted">Reduce manual work by 70% with smart process automation.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="card h-100 border-0 shadow-sm">
-                        <div class="card-body text-center p-4">
-                            <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-3 mb-3 mx-auto" style="width: 60px; height: 60px;">
-                                <i class="fas fa-cloud fa-2x"></i>
-                            </div>
-                            <h4 class="mb-3">Cloud-Based</h4>
-                            <p class="text-muted">Access your ERP anytime, anywhere with enterprise-grade security.</p>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        {% endif %}
 
-    {# CTA Section #}
-    <section class="bg-light py-5">
-        <div class="container py-5 text-center">
-            <h2 class="fw-bold mb-4">Ready to get started?</h2>
-            <p class="lead text-muted mb-5">Join hundreds of enterprises transforming their operations with NXDOne.</p>
-            <a href="{{ path('index') }}" class="btn btn-primary btn-lg px-5">Start Free Trial</a>
+        {# Orders Widget - Visible to sales and inventory roles #}
+        {% if is_granted('VIEW_ORDERS') %}
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card dashboard-card h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted mb-2">New Orders</h6>
+                                <h3 class="mb-0">{{ new_orders }}</h3>
+                                <small class="{{ order_change >= 0 ? 'text-success' : 'text-danger' }}">
+                                    <i class="fas fa-caret-{{ order_change >= 0 ? 'up' : 'down' }} me-1"></i>
+                                    {{ order_change|abs }}% from last week
+                                </small>
+                            </div>
+                            <div class="card-icon success">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {# Inventory Widget - Visible to inventory roles #}
+        {% if is_granted('VIEW_INVENTORY') %}
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card dashboard-card h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted mb-2">Low Stock Items</h6>
+                                <h3 class="mb-0">{{ low_stock_count }}</h3>
+                                <small class="text-danger">
+                                    <i class="fas fa-exclamation-circle me-1"></i>
+                                    Needs attention
+                                </small>
+                            </div>
+                            <div class="card-icon danger">
+                                <i class="fas fa-box-open"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {# Customers Widget - Visible to sales and customer service roles #}
+        {% if is_granted('VIEW_CUSTOMERS') %}
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card dashboard-card h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted mb-2">New Customers</h6>
+                                <h3 class="mb-0">{{ new_customers }}</h3>
+                                <small class="{{ customer_change >= 0 ? 'text-success' : 'text-danger' }}">
+                                    <i class="fas fa-caret-{{ customer_change >= 0 ? 'up' : 'down' }} me-1"></i>
+                                    {{ customer_change|abs }}% from last month
+                                </small>
+                            </div>
+                            <div class="card-icon warning">
+                                <i class="fas fa-users"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="row mt-4">
+        {# Recent Orders Table - Visible with VIEW_ORDERS permission #}
+        {% if is_granted('VIEW_ORDERS') %}
+            <div class="col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Recent Orders</h5>
+                        {% if is_granted('EXPORT_DATA') %}
+                            <a href="{{ path('order_export') }}" class="btn btn-sm btn-outline-secondary">
+                                <i class="fas fa-download me-1"></i> Export
+                            </a>
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Order #</th>
+                                    <th>Customer</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Total</th>
+                                    {% if is_granted('EDIT_ORDERS') %}<th>Actions</th>{% endif %}
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for order in recent_orders %}
+                                    <tr>
+                                        <td>{{ order.orderNumber }}</td>
+                                        <td>{{ order.customer.name }}</td>
+                                        <td>{{ order.date|date('m/d/Y') }}</td>
+                                        <td>
+                                    <span class="badge bg-{{ order.status == 'completed' ? 'success' : (order.status == 'pending' ? 'warning' : 'danger') }}">
+                                        {{ order.status|capitalize }}
+                                    </span>
+                                        </td>
+                                        <td>${{ order.total|number_format(2) }}</td>
+                                        {% if is_granted('EDIT_ORDERS') %}
+                                            <td>
+                                                <a href="{{ path('order_edit', {'id': order.id}) }}" class="btn btn-sm btn-outline-primary">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                            </td>
+                                        {% endif %}
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {# Activity Feed - Visible to all authenticated users #}
+        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <div class="col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Recent Activity</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="activity-feed">
+                            {% for activity in recent_activities %}
+                                <div class="activity-item d-flex mb-3">
+                                    <div class="activity-icon bg-{{ activity.type }} text-white rounded-circle me-3 p-2">
+                                        <i class="fas fa-{{ activity.icon }}"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1">{{ activity.title }}</h6>
+                                        <p class="text-muted mb-0">{{ activity.description }}</p>
+                                        <small class="text-muted">{{ activity.time|date('M j, g:i a') }}</small>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    {# Admin Statistics Section - Only for admins #}
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Admin Statistics</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-3">
+                                        <i class="fas fa-users fa-2x text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1">Active Users</h6>
+                                        <h3 class="mb-0">{{ active_users }}</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-3">
+                                        <i class="fas fa-sync-alt fa-2x text-success"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1">System Uptime</h6>
+                                        <h3 class="mb-0">{{ system_uptime }} days</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-3">
+                                        <i class="fas fa-database fa-2x text-info"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1">Database Size</h6>
+                                        <h3 class="mb-0">{{ db_size }} MB</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </section>
+    {% endif %}
 {% endblock %}

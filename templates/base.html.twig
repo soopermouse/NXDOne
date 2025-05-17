@@ -3,150 +3,522 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}NXDOne ERP{% endblock %}</title>
+    <title>{% block title %}NXDTech ERP{% endblock %}</title>
 
-    {# Bootstrap 5 CSS #}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Favicon -->
+    <link rel="icon" href="{{ asset('favicon.ico') }}">
 
-    {# Font Awesome for icons #}
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    {# Custom CSS #}
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    {% block stylesheets %}{% endblock %}
+    {% block stylesheets %}
+        <!-- Base CSS -->
+        <style>
+            :root {
+                --primary: #2563eb;
+                --primary-dark: #1d4ed8;
+                --secondary: #10b981;
+                --dark: #1e293b;
+                --light: #f8fafc;
+                --gray: #94a3b8;
+                --sidebar-width: 250px;
+            }
+
+            body {
+                font-family: 'Poppins', sans-serif;
+                background-color: #f5f7fa;
+                overflow-x: hidden;
+            }
+
+            /* Top Navigation */
+            .top-navbar {
+                background-color: white;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                height: 60px;
+                position: fixed;
+                top: 0;
+                right: 0;
+                left: 0;
+                z-index: 1030;
+            }
+
+            .navbar-brand {
+                font-weight: 700;
+                color: var(--primary);
+            }
+
+            .search-box {
+                position: relative;
+                max-width: 400px;
+            }
+
+            .search-box input {
+                padding-left: 40px;
+                border-radius: 20px;
+                border: 1px solid #e2e8f0;
+            }
+
+            .search-box i {
+                position: absolute;
+                left: 15px;
+                top: 10px;
+                color: var(--gray);
+            }
+
+            .notification-badge {
+                position: absolute;
+                top: -5px;
+                right: -5px;
+                width: 18px;
+                height: 18px;
+                background-color: var(--secondary);
+                color: white;
+                border-radius: 50%;
+                font-size: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            /* Sidebar */
+            .sidebar {
+                width: var(--sidebar-width);
+                background-color: white;
+                position: fixed;
+                top: 60px;
+                bottom: 0;
+                left: 0;
+                box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+                transition: all 0.3s ease;
+                z-index: 1020;
+                overflow-y: auto;
+            }
+
+            .sidebar-menu {
+                list-style: none;
+                padding: 0;
+            }
+
+            .sidebar-menu li {
+                position: relative;
+            }
+
+            .sidebar-menu a {
+                display: flex;
+                align-items: center;
+                padding: 12px 20px;
+                color: var(--dark);
+                text-decoration: none;
+                transition: all 0.3s ease;
+                border-left: 3px solid transparent;
+            }
+
+            .sidebar-menu a:hover, .sidebar-menu a.active {
+                background-color: rgba(37, 99, 235, 0.1);
+                color: var(--primary);
+                border-left-color: var(--primary);
+            }
+
+            .sidebar-menu i {
+                width: 24px;
+                margin-right: 10px;
+                text-align: center;
+            }
+
+            .sidebar-menu .badge {
+                margin-left: auto;
+            }
+
+            .sidebar-submenu {
+                list-style: none;
+                padding-left: 20px;
+                display: none;
+            }
+
+            .sidebar-submenu a {
+                padding: 8px 20px;
+                font-size: 14px;
+            }
+
+            .sidebar-menu li.active .sidebar-submenu {
+                display: block;
+            }
+
+            /* Main Content */
+            .main-content {
+                margin-left: var(--sidebar-width);
+                margin-top: 60px;
+                padding: 20px;
+                transition: all 0.3s ease;
+            }
+
+            .page-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 20px;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
+                font-weight: 600;
+                color: var(--dark);
+            }
+
+            .breadcrumb {
+                background-color: transparent;
+                padding: 0;
+            }
+
+            /* Dashboard Cards */
+            .dashboard-card {
+                border: none;
+                border-radius: 10px;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+                transition: all 0.3s ease;
+                margin-bottom: 20px;
+            }
+
+            .dashboard-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+            }
+
+            .card-icon {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 20px;
+                color: white;
+            }
+
+            .card-icon.primary {
+                background-color: var(--primary);
+            }
+
+            .card-icon.success {
+                background-color: var(--secondary);
+            }
+
+            .card-icon.warning {
+                background-color: #f59e0b;
+            }
+
+            .card-icon.danger {
+                background-color: #ef4444;
+            }
+
+            /* Responsive adjustments */
+            @media (max-width: 992px) {
+                .sidebar {
+                    left: -var(--sidebar-width);
+                }
+
+                .sidebar.active {
+                    left: 0;
+                }
+
+                .main-content {
+                    margin-left: 0;
+                }
+
+                .main-content.active {
+                    margin-left: var(--sidebar-width);
+                }
+            }
+        </style>
+    {% endblock %}
+
+    {% block extra_styles %}{% endblock %}
 </head>
 <body>
-{# Navigation Bar #}
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
-    <div class="container">
-        <a class="navbar-brand" href="{{ path('index') }}">
-            <i class="fas fa-cubes me-2"></i>NXDOne
+<!-- Top Navigation Bar -->
+<nav class="navbar top-navbar navbar-expand-lg navbar-light bg-white">
+    <div class="container-fluid">
+        <!-- Brand and toggle button -->
+        <a class="navbar-brand" href="{{ path('app_dashboard') }}">
+            <span class="fw-bold">NXD</span>Tech ERP
         </a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+        <!-- Toggle sidebar button (visible on mobile) -->
+        <button class="navbar-toggler d-lg-none" type="button" id="sidebarToggle">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link {{ app.current_route == '' ? 'active' }}" href="{{ path('index') }}">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ app.current_route starts with '' ? 'active' }}" href="{{ path('index') }}">Features</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                        Solutions
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Finance</a></li>
-                        <li><a class="dropdown-item" href="#">Inventory</a></li>
-                        <li><a class="dropdown-item" href="#">HR</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ app.current_route == '' ? 'active' }}" href="{{ path('index') }}">Contact</a>
-                </li>
-            </ul>
+        <!-- Search box -->
+        <div class="search-box ms-lg-3">
+            <i class="fas fa-search"></i>
+            <input type="text" class="form-control" placeholder="Search...">
+        </div>
 
-            <div class="d-flex">
-                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                    <div class="dropdown">
-                        <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user-circle me-1"></i> {{ app.user.firstName }}
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="{{ path('app_profile') }}">Profile</a></li>
-                            <li><a class="dropdown-item" href="{{ path('app_logout') }}">Logout</a></li>
-                        </ul>
-                    </div>
-                {% else %}
-                    <a href="{{ path('index') }}" class="btn btn-outline-light me-2">Login</a>
-                    <a href="{{ path('index') }}" class="btn btn-light">Register</a>
-                {% endif %}
+        <!-- Right side menu -->
+        <div class="ms-auto d-flex align-items-center">
+            <!-- Notifications dropdown -->
+            <div class="dropdown me-3">
+                <a href="#" class="position-relative" id="notificationsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-bell fs-5 text-muted"></i>
+                    <span class="notification-badge">3</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown" style="width: 300px;">
+                    <li><h6 class="dropdown-header">Notifications (3)</h6></li>
+                    <li>
+                        <a class="dropdown-item" href="#">
+                            <div class="d-flex">
+                                <div class="me-3">
+                                    <i class="fas fa-shipping-fast text-primary"></i>
+                                </div>
+                                <div>
+                                    <small class="text-muted">5 min ago</small>
+                                    <p class="mb-0">New order received</p>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="#">
+                            <div class="d-flex">
+                                <div class="me-3">
+                                    <i class="fas fa-user-check text-success"></i>
+                                </div>
+                                <div>
+                                    <small class="text-muted">1 hour ago</small>
+                                    <p class="mb-0">New customer registered</p>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="#">
+                            <div class="d-flex">
+                                <div class="me-3">
+                                    <i class="fas fa-exclamation-triangle text-warning"></i>
+                                </div>
+                                <div>
+                                    <small class="text-muted">2 hours ago</small>
+                                    <p class="mb-0">Low inventory alert</p>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item text-center" href="#">View all notifications</a></li>
+                </ul>
+            </div>
+
+            <!-- Messages dropdown -->
+            <div class="dropdown me-3">
+                <a href="#" class="position-relative" id="messagesDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-envelope fs-5 text-muted"></i>
+                    <span class="notification-badge">5</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="messagesDropdown" style="width: 300px;">
+                    <li><h6 class="dropdown-header">Messages (5)</h6></li>
+                    <li>
+                        <a class="dropdown-item" href="#">
+                            <div class="d-flex">
+                                <div class="me-3">
+                                    <img src="https://via.placeholder.com/40" class="rounded-circle" alt="User">
+                                </div>
+                                <div>
+                                    <small class="text-muted">John Doe • 10 min ago</small>
+                                    <p class="mb-0">Regarding the upcoming delivery...</p>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="#">
+                            <div class="d-flex">
+                                <div class="me-3">
+                                    <img src="https://via.placeholder.com/40" class="rounded-circle" alt="User">
+                                </div>
+                                <div>
+                                    <small class="text-muted">Sarah Smith • 2 hours ago</small>
+                                    <p class="mb-0">Invoice #1234 is pending approval</p>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item text-center" href="#">View all messages</a></li>
+                </ul>
+            </div>
+
+            <!-- User profile dropdown -->
+            <div class="dropdown">
+                <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="https://via.placeholder.com/40" class="rounded-circle me-2" alt="User">
+                    <span class="d-none d-lg-inline">
+                            {% if app.user %}
+                                {{ app.user.firstName }} {{ app.user.lastName }}
+                            {% else %}
+                                Guest
+                            {% endif %}
+                        </span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                    <li><a class="dropdown-item" href="{{ path('app_profile') }}"><i class="fas fa-user me-2"></i> Profile</a></li>
+                    <li><a class="dropdown-item" href="{{ path('app_settings') }}"><i class="fas fa-cog me-2"></i> Settings</a></li>
+                    <li><a class="dropdown-item" href="{{ path('app_activity_log') }}"><i class="fas fa-list me-2"></i> Activity Log</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        {% if app.user %}
+                            <a class="dropdown-item" href="{{ path('app_logout') }}"><i class="fas fa-sign-out-alt me-2"></i> Sign Out</a>
+                        {% else %}
+                            <a class="dropdown-item" href="{{ path('app_login') }}"><i class="fas fa-sign-in-alt me-2"></i> Sign In</a>
+                        {% endif %}
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
 </nav>
 
-{# Flash Messages #}
-<div class="container mt-3">
-    {% for type, messages in app.flashes %}
-        {% for message in messages %}
-            <div class="alert alert-{{ type }} alert-dismissible fade show">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        {% endfor %}
-    {% endfor %}
+<!-- Sidebar -->
+<div class="sidebar">
+    <ul class="sidebar-menu">
+        <li class="{{ app.current_route == 'app_dashboard' ? 'active' : '' }}">
+            <a href="{{ path('app_dashboard') }}" class="{{ app.current_route == 'app_dashboard' ? 'active' : '' }}">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <li class="{{ app.current_route starts with 'app_sales' ? 'active' : '' }}">
+            <a href="{{ path('app_sales') }}">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Sales</span>
+                <span class="badge bg-primary ms-auto">New</span>
+            </a>
+        </li>
+        <li class="{{ app.current_route starts with 'app_inventory' ? 'active' : '' }}">
+            <a href="{{ path('app_inventory') }}">
+                <i class="fas fa-boxes"></i>
+                <span>Inventory</span>
+            </a>
+        </li>
+        <li class="{{ app.current_route starts with 'app_customers' ? 'active' : '' }}">
+            <a href="{{ path('app_customers') }}">
+                <i class="fas fa-users"></i>
+                <span>Customers</span>
+            </a>
+        </li>
+        <li class="{{ app.current_route starts with 'app_accounting' ? 'active' : '' }}">
+            <a href="{{ path('app_accounting') }}">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <span>Accounting</span>
+            </a>
+            <ul class="sidebar-submenu">
+                <li><a href="{{ path('app_accounting_invoices') }}">Invoices</a></li>
+                <li><a href="{{ path('app_accounting_expenses') }}">Expenses</a></li>
+                <li><a href="{{ path('app_accounting_payments') }}">Payments</a></li>
+                <li><a href="{{ path('app_accounting_reports') }}">Reports</a></li>
+            </ul>
+        </li>
+        <li class="{{ app.current_route starts with 'app_purchasing' ? 'active' : '' }}">
+            <a href="{{ path('app_purchasing') }}">
+                <i class="fas fa-truck"></i>
+                <span>Purchasing</span>
+            </a>
+        </li>
+        <li class="{{ app.current_route starts with 'app_reports' ? 'active' : '' }}">
+            <a href="{{ path('app_reports') }}">
+                <i class="fas fa-chart-line"></i>
+                <span>Reports</span>
+            </a>
+        </li>
+        <li class="{{ app.current_route starts with 'app_settings' ? 'active' : '' }}">
+            <a href="{{ path('app_settings') }}">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+            <ul class="sidebar-submenu">
+                <li><a href="{{ path('app_settings_company') }}">Company Settings</a></li>
+                <li><a href="{{ path('app_settings_users') }}">User Management</a></li>
+                <li><a href="{{ path('app_settings_modules') }}">Modules</a></li>
+                <li><a href="{{ path('app_settings_integrations') }}">Integrations</a></li>
+            </ul>
+        </li>
+    </ul>
 </div>
 
-{# Main Content #}
-<main class="container my-5">
+<!-- Main Content -->
+<div class="main-content" id="mainContent">
+    {% block breadcrumb %}
+        <!-- Page Header -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">{% block page_title %}Dashboard{% endblock %}</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ path('app_dashboard') }}">Home</a></li>
+                        {% block breadcrumb_items %}{% endblock %}
+                    </ol>
+                </nav>
+            </div>
+            <div>
+                {% block page_actions %}{% endblock %}
+            </div>
+        </div>
+    {% endblock %}
+
     {% block body %}{% endblock %}
-</main>
+</div>
 
-{# Footer #}
-<footer class="bg-dark text-white py-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-4 mb-4 mb-lg-0">
-                <h5 class="mb-3">NXDOne ERP</h5>
-                <p>Next-generation enterprise resource planning for modern businesses.</p>
-                <div class="social-icons">
-                    <a href="#" class="text-white me-2"><i class="fab fa-linkedin fa-lg"></i></a>
-                    <a href="#" class="text-white me-2"><i class="fab fa-twitter fa-lg"></i></a>
-                    <a href="#" class="text-white me-2"><i class="fab fa-facebook fa-lg"></i></a>
-                </div>
-            </div>
-            <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
-                <h5 class="mb-3">Product</h5>
-                <ul class="list-unstyled">
-                    <li class="mb-2"><a href="#" class="text-white-50">Features</a></li>
-                    <li class="mb-2"><a href="#" class="text-white-50">Pricing</a></li>
-                    <li class="mb-2"><a href="#" class="text-white-50">API</a></li>
-                </ul>
-            </div>
-            <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
-                <h5 class="mb-3">Resources</h5>
-                <ul class="list-unstyled">
-                    <li class="mb-2"><a href="#" class="text-white-50">Documentation</a></li>
-                    <li class="mb-2"><a href="#" class="text-white-50">Blog</a></li>
-                    <li class="mb-2"><a href="#" class="text-white-50">Support</a></li>
-                </ul>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <h5 class="mb-3">Contact Us</h5>
-                <ul class="list-unstyled">
-                    <li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i> 123 Business Ave, Suite 100</li>
-                    <li class="mb-2"><i class="fas fa-phone me-2"></i> +1 (555) 123-4567</li>
-                    <li class="mb-2"><i class="fas fa-envelope me-2"></i> info@nxdone.com</li>
-                </ul>
-            </div>
-        </div>
-        <hr class="my-4 bg-secondary">
-        <div class="row">
-            <div class="col-md-6 text-center text-md-start">
-                <p class="small mb-0">&copy; {{ "now"|date("Y") }} NXDOne. All rights reserved.</p>
-            </div>
-            <div class="col-md-6 text-center text-md-end">
-                <p class="small mb-0">
-                    <a href="#" class="text-white-50">Privacy Policy</a> |
-                    <a href="#" class="text-white-50">Terms of Service</a>
-                </p>
-            </div>
-        </div>
-    </div>
-</footer>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-{# Bootstrap 5 JS Bundle with Popper #}
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+{% block javascripts %}
+    <!-- Base JS -->
+    <script>
+        // Toggle sidebar on mobile
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('active');
+            document.getElementById('mainContent').classList.toggle('active');
+        });
 
-{# Custom JS #}
-<script src="{{ asset('js/app.js') }}"></script>
+        // Initialize tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
 
-{% block javascripts %}{% endblock %}
+        // Toggle submenus
+        document.querySelectorAll('.sidebar-menu > li > a').forEach(function(item) {
+            item.addEventListener('click', function(e) {
+                if (this.nextElementSibling && this.nextElementSibling.classList.contains('sidebar-submenu')) {
+                    e.preventDefault();
+                    this.parentElement.classList.toggle('active');
+                }
+            });
+        });
+
+        // Highlight current route in sidebar
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPath = window.location.pathname;
+            document.querySelectorAll('.sidebar-menu a').forEach(link => {
+                if (link.getAttribute('href') === currentPath) {
+                    link.classList.add('active');
+                    let parent = link.closest('.sidebar-submenu');
+                    while (parent) {
+                        parent.style.display = 'block';
+                        parent.previousElementSibling.parentElement.classList.add('active');
+                        parent = parent.parentElement.closest('.sidebar-submenu');
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block extra_scripts %}{% endblock %}
 </body>
 </html>
