@@ -24,6 +24,9 @@ class Order
     #[ORM\JoinColumn(nullable: false)]
     private ?Client $ClientId = null;
 
+    #[ORM\OneToOne(mappedBy: 'OrderId', cascade: ['persist', 'remove'])]
+    private ?Payment $payment = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -56,6 +59,28 @@ class Order
     public function setClientId(?Client $ClientId): static
     {
         $this->ClientId = $ClientId;
+
+        return $this;
+    }
+
+    public function getPayment(): ?Payment
+    {
+        return $this->payment;
+    }
+
+    public function setPayment(?Payment $payment): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($payment === null && $this->payment !== null) {
+            $this->payment->setOrderId(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($payment !== null && $payment->getOrderId() !== $this) {
+            $payment->setOrderId($this);
+        }
+
+        $this->payment = $payment;
 
         return $this;
     }
