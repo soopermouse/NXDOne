@@ -245,7 +245,7 @@
 <nav class="navbar top-navbar navbar-expand-lg navbar-light bg-white">
     <div class="container-fluid">
         <!-- Brand and toggle button -->
-        <a class="navbar-brand" href="{{ path('app_dashboard') }}">
+        <a class="navbar-brand" href="{{ path('index') }}">
             <span class="fw-bold">NXD</span>Tech ERP
         </a>
 
@@ -367,14 +367,14 @@
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                     <li><a class="dropdown-item" href="{{ path('app_profile') }}"><i class="fas fa-user me-2"></i> Profile</a></li>
-                    <li><a class="dropdown-item" href="{{ path('app_settings') }}"><i class="fas fa-cog me-2"></i> Settings</a></li>
-                    <li><a class="dropdown-item" href="{{ path('app_activity_log') }}"><i class="fas fa-list me-2"></i> Activity Log</a></li>
+                    <li><a class="dropdown-item" href="{{ path('app_profile_settings') }}"><i class="fas fa-cog me-2"></i> Settings</a></li>
+                    <li><a class="dropdown-item" href="{{ path('app_profile_activity_log') }}"><i class="fas fa-list me-2"></i> Activity Log</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li>
                         {% if app.user %}
-                            <a class="dropdown-item" href="{{ path('app_logout') }}"><i class="fas fa-sign-out-alt me-2"></i> Sign Out</a>
+                            <a class="dropdown-item" href="{{ path('index') }}"><i class="fas fa-sign-out-alt me-2"></i> Sign Out</a>
                         {% else %}
-                            <a class="dropdown-item" href="{{ path('app_login') }}"><i class="fas fa-sign-in-alt me-2"></i> Sign In</a>
+                            <a class="dropdown-item" href="{{ path('index') }}"><i class="fas fa-sign-in-alt me-2"></i> Sign In</a>
                         {% endif %}
                     </li>
                 </ul>
@@ -417,10 +417,10 @@
                 <span>Accounting</span>
             </a>
             <ul class="sidebar-submenu">
-                <li><a href="{{ path('app_accounting_invoices') }}">Invoices</a></li>
-                <li><a href="{{ path('app_accounting_expenses') }}">Expenses</a></li>
-                <li><a href="{{ path('app_accounting_payments') }}">Payments</a></li>
-                <li><a href="{{ path('app_accounting_reports') }}">Reports</a></li>
+                <li><a href="{{ path('app_accounting') }}">Invoices</a></li>
+                <li><a href="{{ path('app_accounting') }}">Expenses</a></li>
+                <li><a href="{{ path('app_accounting') }}">Payments</a></li>
+                <li><a href="{{ path('app_accounting') }}">Reports</a></li>
             </ul>
         </li>
         <li class="{{ app.current_route starts with 'app_purchasing' ? 'active' : '' }}">
@@ -441,10 +441,10 @@
                 <span>Settings</span>
             </a>
             <ul class="sidebar-submenu">
-                <li><a href="{{ path('app_settings_company') }}">Company Settings</a></li>
-                <li><a href="{{ path('app_settings_users') }}">User Management</a></li>
-                <li><a href="{{ path('app_settings_modules') }}">Modules</a></li>
-                <li><a href="{{ path('app_settings_integrations') }}">Integrations</a></li>
+                <li><a href="{{ path('app_settings') }}">Company Settings</a></li>
+                <li><a href="{{ path('app_settings') }}">User Management</a></li>
+                <li><a href="{{ path('app_settings') }}">Modules</a></li>
+                <li><a href="{{ path('app_settings') }}">Integrations</a></li>
             </ul>
         </li>
     </ul>
